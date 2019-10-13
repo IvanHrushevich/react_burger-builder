@@ -46,29 +46,30 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler = () => {
-    this.setState({ loading: true });
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.state.totalPrice,
-      customer: {
-        name: 'Ivan Hrushevich',
-        address: {
-          street: 'Lenina 1',
-          zipCode: '222222',
-          country: 'Belarus'
-        },
-        email: 'test@test.com'
-      },
-      deliveryMethod: 'fastest'
-    };
-    axios
-      .post('/orders.json', order)
-      .then(() => {
-        this.setState({ loading: false, purchasing: false });
-      })
-      .catch(() => {
-        this.setState({ loading: false, purchasing: false });
-      });
+    // this.setState({ loading: true });
+    // const order = {
+    //   ingredients: this.state.ingredients,
+    //   price: this.state.totalPrice,
+    //   customer: {
+    //     name: 'Ivan Hrushevich',
+    //     address: {
+    //       street: 'Lenina 1',
+    //       zipCode: '222222',
+    //       country: 'Belarus'
+    //     },
+    //     email: 'test@test.com'
+    //   },
+    //   deliveryMethod: 'fastest'
+    // };
+    // axios
+    //   .post('/orders.json', order)
+    //   .then(() => {
+    //     this.setState({ loading: false, purchasing: false });
+    //   })
+    //   .catch(() => {
+    //     this.setState({ loading: false, purchasing: false });
+    //   });
+    this.props.history.push('/checkout');
   };
 
   updatePurchaseState(ingredients) {
@@ -173,4 +174,5 @@ class BurgerBuilder extends Component {
   }
 }
 
-export default withErrorHandler(BurgerBuilder, axios);
+// export default withErrorHandler(BurgerBuilder, axios);
+export default BurgerBuilder;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import axios from '../../axios-orders';
 
+import axios from '../../axios-orders';
 import Aux from '../../hoc/Aux1/Aux1';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -167,5 +167,4 @@ class BurgerBuilder extends Component {
   }
 }
 
-// export default withErrorHandler(BurgerBuilder, axios);
-export default BurgerBuilder;
+export default withErrorHandler(BurgerBuilder, axios);

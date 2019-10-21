@@ -7,12 +7,34 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import Input from '../../components/UI/Input/Input';
 
 class ContactData extends Component {
+  getFormElementConfig = (
+    placeholder,
+    elementType = 'input',
+    type = 'text',
+    value = ''
+  ) => ({
+    elementType,
+    elementConfig: {
+      type,
+      placeholder
+    },
+    value
+  });
+
   state = {
-    name: '',
-    email: '',
-    address: {
-      street: '',
-      postalCode: ''
+    orderForm: {
+      name: this.getFormElementConfig('Your name'),
+      street: this.getFormElementConfig('Your street'),
+      zipCode: this.getFormElementConfig('ZIP CODE'),
+      country: this.getFormElementConfig('Country'),
+      email: this.getFormElementConfig('Email'),
+      deliveryMethod: {
+        elementType: 'select',
+        elementConfig: [
+          { value: 'fastest', displayValue: 'Fastest' },
+          { value: 'cheapest', displayValue: 'Cheapest' }
+        ]
+      }
     },
     loading: false
   };
@@ -22,17 +44,7 @@ class ContactData extends Component {
     this.setState({ loading: true });
     const order = {
       ingredients: this.props.ingredients,
-      price: this.props.price,
-      customer: {
-        name: 'Ivan Hrushevich',
-        address: {
-          street: 'Lenina 1',
-          zipCode: '222222',
-          country: 'Belarus'
-        },
-        email: 'test@test.com'
-      },
-      deliveryMethod: 'fastest'
+      price: this.props.price
     };
 
     axios
@@ -47,6 +59,11 @@ class ContactData extends Component {
   };
 
   render() {
+    const formElements = Object.keys(this.state.orderForm).map(element => ({
+      ...this.state[element],
+      id: element
+    }));
+
     let form = (
       <form>
         <Input type="text" name="name" placeholder="Your Name" />

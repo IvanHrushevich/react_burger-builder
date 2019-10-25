@@ -30,10 +30,12 @@ class ContactData extends Component {
       email: this.getFormElementConfig('Email'),
       deliveryMethod: {
         elementType: 'select',
-        elementConfig: [
-          { value: 'fastest', displayValue: 'Fastest' },
-          { value: 'cheapest', displayValue: 'Cheapest' }
-        ]
+        elementConfig: {
+          options: [
+            { value: 'fastest', displayValue: 'Fastest' },
+            { value: 'cheapest', displayValue: 'Cheapest' }
+          ]
+        }
       }
     },
     loading: false
@@ -60,16 +62,22 @@ class ContactData extends Component {
 
   render() {
     const formElements = Object.keys(this.state.orderForm).map(element => ({
-      ...this.state[element],
+      config: { ...this.state.orderForm[element] },
       id: element
     }));
 
     let form = (
       <form>
-        <Input type="text" name="name" placeholder="Your Name" />
-        <Input type="email" name="email" placeholder="Email" />
-        <Input type="text" name="street" placeholder="Street" />
-        <Input type="text" name="postal" placeholder="Postal code" />
+        {formElements.map(formElement => {
+          return (
+            <Input
+              key={formElement.id}
+              elementtype={formElement.config.elementType}
+              elementConfig={formElement.config.elementConfig}
+              value={formElement.config.value}
+            ></Input>
+          );
+        })}
         <Button btnType="Success" clicked={this.orderHandler}>
           Order
         </Button>

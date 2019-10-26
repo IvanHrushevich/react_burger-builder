@@ -18,14 +18,25 @@ class ContactData extends Component {
       type,
       placeholder
     },
-    value
+    value,
+    validation: {
+      required: true
+    },
+    valid: false
   });
 
   state = {
     orderForm: {
       name: this.getFormElementConfig('Your name'),
       street: this.getFormElementConfig('Your street'),
-      zipCode: this.getFormElementConfig('ZIP CODE'),
+      zipCode: {
+        ...this.getFormElementConfig('ZIP CODE'),
+        validation: {
+          required: true,
+          minLength: 5,
+          maxLength: 5
+        }
+      },
       country: this.getFormElementConfig('Country'),
       email: this.getFormElementConfig('Email'),
       deliveryMethod: {
@@ -41,13 +52,37 @@ class ContactData extends Component {
     loading: false
   };
 
+  checkValidity = (value, rules) => {
+    let isValid = true;
+
+    if (rules.required) {
+      isValid = value.trim() !== '';
+    }
+
+    if (rules.minLength) {
+      isValid = value.length >= rules.minLength && isValid;
+    }
+
+    if (rules.maxLength) {
+      isValid = value.length <= rules.maxLength && isValid;
+    }
+
+    return isValid;
+  };
+
   inputChangedHandler = (event, elementId) => {
+    const updatedElement = {
+      ...this.state.orderForm[elementId],
+      value: event.target.value,
+      valid: this.checkValidity(
+        event.target.value,
+        this.state.orderForm[elementId].validation
+      )
+    };
+
     const updatedForm = {
       ...this.state.orderForm,
-      [elementId]: {
-        ...this.state.orderForm[elementId],
-        value: event.target.value
-      }
+      [elementId]: updatedElement
     };
 
     this.setState({ orderForm: updatedForm });

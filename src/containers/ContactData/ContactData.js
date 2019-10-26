@@ -41,12 +41,32 @@ class ContactData extends Component {
     loading: false
   };
 
+  inputChangedHandler = (event, elementId) => {
+    const updatedForm = {
+      ...this.state.orderForm,
+      [elementId]: {
+        ...this.state.orderForm[elementId],
+        value: event.target.value
+      }
+    };
+
+    this.setState({ orderForm: updatedForm });
+  };
+
   orderHandler = event => {
     event.preventDefault();
+
     this.setState({ loading: true });
+
+    const orderData = Object.keys(this.state.orderForm).reduce((acc, title) => {
+      acc[title] = this.state.orderForm[title].value;
+      return acc;
+    }, {});
+
     const order = {
       ingredients: this.props.ingredients,
-      price: this.props.price
+      price: this.props.price,
+      orderData
     };
 
     axios
@@ -67,7 +87,7 @@ class ContactData extends Component {
     }));
 
     let form = (
-      <form>
+      <form onSubmit={this.orderHandler}>
         {formElements.map(formElement => {
           return (
             <Input
@@ -75,6 +95,7 @@ class ContactData extends Component {
               elementtype={formElement.config.elementType}
               elementConfig={formElement.config.elementConfig}
               value={formElement.config.value}
+              changed={event => this.inputChangedHandler(event, formElement.id)}
             ></Input>
           );
         })}

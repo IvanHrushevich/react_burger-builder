@@ -22,7 +22,8 @@ class ContactData extends Component {
     validation: {
       required: true
     },
-    valid: false
+    valid: false,
+    touched: false
   });
 
   state = {
@@ -53,6 +54,10 @@ class ContactData extends Component {
   };
 
   checkValidity = (value, rules) => {
+    if (!rules) {
+      return;
+    }
+
     let isValid = true;
 
     if (rules.required) {
@@ -77,7 +82,8 @@ class ContactData extends Component {
       valid: this.checkValidity(
         event.target.value,
         this.state.orderForm[elementId].validation
-      )
+      ),
+      touched: true
     };
 
     const updatedForm = {
@@ -130,6 +136,9 @@ class ContactData extends Component {
               elementtype={formElement.config.elementType}
               elementConfig={formElement.config.elementConfig}
               value={formElement.config.value}
+              invalid={!formElement.config.valid}
+              shouldValidate={formElement.config.validation}
+              touched={formElement.config.touched}
               changed={event => this.inputChangedHandler(event, formElement.id)}
             ></Input>
           );

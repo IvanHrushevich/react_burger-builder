@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { createFormElementConfig } from '../../utils/index';
 import Button from '../../components/UI/Button/Button';
 import classes from './ContactData.module.css';
 import Spinner from '../../components/UI/Spinner/Spinner';
@@ -10,34 +11,20 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import { orderActions } from '../../store/index';
 
 class ContactData extends Component {
-  getFormElementConfig = (placeholder, elementType = 'input', type = 'text', value = '') => ({
-    elementType,
-    elementConfig: {
-      type,
-      placeholder
-    },
-    value,
-    validation: {
-      required: true
-    },
-    valid: false,
-    touched: false
-  });
-
   state = {
     orderForm: {
-      name: this.getFormElementConfig('Your name'),
-      street: this.getFormElementConfig('Your street'),
+      name: createFormElementConfig('Your name'),
+      street: createFormElementConfig('Your street'),
       zipCode: {
-        ...this.getFormElementConfig('ZIP CODE'),
+        ...createFormElementConfig('ZIP CODE'),
         validation: {
           required: true,
           minLength: 5,
           maxLength: 5
         }
       },
-      country: this.getFormElementConfig('Country'),
-      email: this.getFormElementConfig('Email'),
+      country: createFormElementConfig('Country'),
+      email: createFormElementConfig('Email'),
       deliveryMethod: {
         elementType: 'select',
         elementConfig: {
@@ -138,7 +125,7 @@ class ContactData extends Component {
               shouldValidate={formElement.config.validation}
               touched={formElement.config.touched}
               changed={event => this.inputChangedHandler(event, formElement.id)}
-            ></Input>
+            />
           );
         })}
         <Button btnType="Success" disabled={!this.state.formIsValid} clicked={this.orderHandler}>

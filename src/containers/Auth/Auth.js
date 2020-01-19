@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import { createFormElementConfig } from '../../utils/index';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
 import classes from './Auth.module.css';
-import { updateObject } from '../../store/index';
+import { updateObject, authActions } from '../../store/index';
 
-export default class Auth extends Component {
+class Auth extends Component {
   state = {
     controls: {
-      name: updateObject(createFormElementConfig('Email', 'input', 'email'), {
+      email: updateObject(createFormElementConfig('Email', 'input', 'email'), {
         validation: {
           required: true,
           isEmail: true
@@ -63,6 +64,11 @@ export default class Auth extends Component {
     this.setState({ controls: updatedControls });
   };
 
+  submitHandler = event => {
+    event.preventDefault();
+    this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value);
+  };
+
   render() {
     const formElements = Object.keys(this.state.controls).map(element => ({
       config: { ...this.state.controls[element] },
@@ -84,7 +90,7 @@ export default class Auth extends Component {
 
     return (
       <div className={classes.Auth}>
-        <form>
+        <form onSubmit={this.submitHandler}>
           {form}
           <Button btnType="Success">Submit</Button>
         </form>
@@ -92,3 +98,9 @@ export default class Auth extends Component {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => ({
+  onAuth: (email, password) => dispatch(authActions.auth(email, password))
+});
+
+export default connect(null, mapDispatchToProps)(Auth);

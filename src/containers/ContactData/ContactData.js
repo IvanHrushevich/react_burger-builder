@@ -8,7 +8,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import Input from '../../components/UI/Input/Input';
 import axios from '../../axios-orders';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import { orderActions } from '../../store/index';
+import { orderActions, updateObject } from '../../store/index';
 
 class ContactData extends Component {
   state = {
@@ -24,7 +24,12 @@ class ContactData extends Component {
         }
       },
       country: createFormElementConfig('Country'),
-      email: createFormElementConfig('Email'),
+      email: updateObject(createFormElementConfig('Email'), {
+        validation: {
+          required: true,
+          isEmail: true
+        }
+      }),
       deliveryMethod: {
         elementType: 'select',
         elementConfig: {
@@ -58,6 +63,11 @@ class ContactData extends Component {
 
     if (rules.maxLength) {
       isValid = value.length <= rules.maxLength && isValid;
+    }
+
+    if (rules.isEmail) {
+      const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+      isValid = emailRegExp.test(value) && isValid;
     }
 
     return isValid;

@@ -12,7 +12,7 @@ const authSuccess = (idToken, userId) => ({
 
 const authFail = error => ({ type: actionTypes.AUTH_FAIL, error });
 
-const logout = () => ({ type: actionTypes.AUTH_LOGOUT });
+export const logout = () => ({ type: actionTypes.AUTH_LOGOUT });
 
 const checkAuthTimeout = expirationTime => dispatch => {
   setTimeout(() => {

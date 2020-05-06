@@ -46,3 +46,8 @@ export const auth = (email, password, isSignUp) => dispatch => {
       dispatch(authFail(error.response.data.error));
     });
 };
+
+export const setAuthRedirectPath = path => ({
+  type: actionTypes.SET_AUTH_REDIRECT_PATH,
+  path
+});

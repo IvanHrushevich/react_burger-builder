@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { createFormElementConfig } from '../../utils/index';
+import { createFormElementConfig, checkValidity } from '../../utils/index';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
@@ -34,37 +34,10 @@ class Auth extends Component {
     }
   }
 
-  checkValidity = (value, rules) => {
-    if (!rules) {
-      return true;
-    }
-
-    let isValid = true;
-
-    if (rules.required) {
-      isValid = value.trim() !== '';
-    }
-
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-
-    if (rules.isEmail) {
-      const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-      isValid = emailRegExp.test(value) && isValid;
-    }
-
-    return isValid;
-  };
-
   inputChangedHandler = (event, controlName) => {
     const updatedControl = updateObject(this.state.controls[controlName], {
       value: event.target.value,
-      valid: this.checkValidity(event.target.value, this.state.controls[controlName].validation),
+      valid: checkValidity(event.target.value, this.state.controls[controlName].validation),
       touched: true
     });
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { createFormElementConfig } from '../../utils/index';
+import { createFormElementConfig, checkValidity } from '../../utils/index';
 import Button from '../../components/UI/Button/Button';
 import classes from './ContactData.module.css';
 import Spinner from '../../components/UI/Spinner/Spinner';
@@ -46,38 +46,11 @@ class ContactData extends Component {
     formIsValid: false
   };
 
-  checkValidity = (value, rules) => {
-    if (!rules) {
-      return true;
-    }
-
-    let isValid = true;
-
-    if (rules.required) {
-      isValid = value.trim() !== '';
-    }
-
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-
-    if (rules.isEmail) {
-      const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-      isValid = emailRegExp.test(value) && isValid;
-    }
-
-    return isValid;
-  };
-
   inputChangedHandler = (event, elementId) => {
     const updatedElement = {
       ...this.state.orderForm[elementId],
       value: event.target.value,
-      valid: this.checkValidity(event.target.value, this.state.orderForm[elementId].validation),
+      valid: checkValidity(event.target.value, this.state.orderForm[elementId].validation),
       touched: true
     };
 

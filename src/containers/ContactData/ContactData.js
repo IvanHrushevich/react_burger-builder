@@ -1,43 +1,35 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { createFormElementConfig } from '../../utils/index';
 import Button from '../../components/UI/Button/Button';
 import classes from './ContactData.module.css';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import Input from '../../components/UI/Input/Input';
 import axios from '../../axios-orders';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import { orderActions } from '../../store/index';
+import { orderActions, updateObject } from '../../store/index';
 
 class ContactData extends Component {
-  getFormElementConfig = (placeholder, elementType = 'input', type = 'text', value = '') => ({
-    elementType,
-    elementConfig: {
-      type,
-      placeholder
-    },
-    value,
-    validation: {
-      required: true
-    },
-    valid: false,
-    touched: false
-  });
-
   state = {
     orderForm: {
-      name: this.getFormElementConfig('Your name'),
-      street: this.getFormElementConfig('Your street'),
+      name: createFormElementConfig('Your name'),
+      street: createFormElementConfig('Your street'),
       zipCode: {
-        ...this.getFormElementConfig('ZIP CODE'),
+        ...createFormElementConfig('ZIP CODE'),
         validation: {
           required: true,
           minLength: 5,
           maxLength: 5
         }
       },
-      country: this.getFormElementConfig('Country'),
-      email: this.getFormElementConfig('Email'),
+      country: createFormElementConfig('Country'),
+      email: updateObject(createFormElementConfig('Email'), {
+        validation: {
+          required: true,
+          isEmail: true
+        }
+      }),
       deliveryMethod: {
         elementType: 'select',
         elementConfig: {
@@ -71,6 +63,11 @@ class ContactData extends Component {
 
     if (rules.maxLength) {
       isValid = value.length <= rules.maxLength && isValid;
+    }
+
+    if (rules.isEmail) {
+      const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+      isValid = emailRegExp.test(value) && isValid;
     }
 
     return isValid;
@@ -113,10 +110,11 @@ class ContactData extends Component {
     const order = {
       ingredients: this.props.ings,
       price: this.props.price,
-      orderData
+      orderData,
+      userId: this.props.userId
     };
 
-    this.props.onOrderBurger(order);
+    this.props.onOrderBurger(order, this.props.token);
   };
 
   render() {
@@ -138,7 +136,7 @@ class ContactData extends Component {
               shouldValidate={formElement.config.validation}
               touched={formElement.config.touched}
               changed={event => this.inputChangedHandler(event, formElement.id)}
-            ></Input>
+            />
           );
         })}
         <Button btnType="Success" disabled={!this.state.formIsValid} clicked={this.orderHandler}>
@@ -162,11 +160,13 @@ class ContactData extends Component {
 const mapStateToProps = state => ({
   ings: state.burgerBuilder.ingredients,
   price: state.burgerBuilder.totalPrice,
-  loading: state.order.loading
+  loading: state.order.loading,
+  token: state.auth.token,
+  userId: state.auth.userId
 });
 
 const mapDispatchToProps = dispatch => ({
-  onOrderBurger: orderData => dispatch(orderActions.purchaseBurger(orderData))
+  onOrderBurger: (orderData, token) => dispatch(orderActions.purchaseBurger(orderData, token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));

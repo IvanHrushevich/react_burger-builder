@@ -16,6 +16,7 @@ const authSuccess = action => ({
   error: null,
   loading: false
 });
+const authLogout = state => updateObject(state, { token: null, userId: null });
 
 const authFail = (state, action) => updateObject(state, { error: action.error, loading: false });
 
@@ -29,6 +30,8 @@ export const authReducer = (state = initialState, action) => {
 
     case actionTypes.AUTH_FAIL:
       return authFail(state, action);
+    case actionTypes.AUTH_LOGOUT:
+      return authLogout(state, action);
 
     default:
       return state;

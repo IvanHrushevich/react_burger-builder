@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Aux from '../../../hoc/Aux1/Aux1';
 import Button from '../../UI/Button/Button';
 
 const orderSummary = props => {
@@ -11,7 +10,7 @@ const orderSummary = props => {
     </li>
   ));
   return (
-    <Aux>
+    <>
       <h2>Your order</h2>
       <p>A delicious burger with the following ingredients:</p>
       <ul>{ingredientSummary}</ul>
@@ -23,7 +22,7 @@ const orderSummary = props => {
       <Button btnType="Success" clicked={props.purcaseContinued}>
         CONTINUE
       </Button>
-    </Aux>
+    </>
   );
 };
 

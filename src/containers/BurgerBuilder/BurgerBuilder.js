@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import axios from '../../axios-orders';
-import Aux from '../../hoc/Aux1/Aux1';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
@@ -58,7 +57,7 @@ export class BurgerBuilder extends Component {
 
     if (this.props.ings) {
       burger = (
-        <Aux>
+        <>
           <Burger ingredients={this.props.ings} />
           <BuildControls
             ingredientAdded={this.props.onIngredientAdded}
@@ -69,7 +68,7 @@ export class BurgerBuilder extends Component {
             ordered={this.purchaseHandler}
             isAuth={this.props.isAuthenticated}
           />
-        </Aux>
+        </>
       );
 
       orderSummary = (
@@ -83,12 +82,12 @@ export class BurgerBuilder extends Component {
     }
 
     return (
-      <Aux>
+      <>
         <Modal isVisible={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
           {orderSummary}
         </Modal>
         {burger}
-      </Aux>
+      </>
     );
   }
 }

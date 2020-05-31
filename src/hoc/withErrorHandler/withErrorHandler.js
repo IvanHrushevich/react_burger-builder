@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import Aux from '../Aux1/Aux1';
 import Modal from '../../components/UI/Modal/Modal';
 
 const withErrorHandler = (WrappedComponent, axios) => {
@@ -35,15 +34,12 @@ const withErrorHandler = (WrappedComponent, axios) => {
 
     render() {
       return (
-        <Aux>
-          <Modal
-            isVisible={this.state.error}
-            modalClosed={this.errorConfirmedHandler}
-          >
+        <>
+          <Modal isVisible={this.state.error} modalClosed={this.errorConfirmedHandler}>
             {this.state.error ? this.state.error.message : null}
           </Modal>
           <WrappedComponent {...this.props} />
-        </Aux>
+        </>
       );
     }
   };

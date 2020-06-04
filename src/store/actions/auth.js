@@ -13,11 +13,7 @@ const authSuccess = (idToken, userId) => ({
 const authFail = error => ({ type: actionTypes.AUTH_FAIL, error });
 
 export const logout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('expirationDate');
-  localStorage.removeItem('userId');
-
-  return { type: actionTypes.AUTH_LOGOUT };
+  return { type: actionTypes.AUTH_INITIATE_LOGOUT };
 };
 
 const checkAuthTimeout = expirationTime => dispatch => {

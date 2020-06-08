@@ -16,10 +16,15 @@ export const logout = () => {
   return { type: actionTypes.AUTH_INITIATE_LOGOUT };
 };
 
-const checkAuthTimeout = expirationTime => dispatch => {
-  setTimeout(() => {
-    dispatch(logout());
-  }, expirationTime);
+export const logoutSucceed = () => {
+  return { type: actionTypes.AUTH_LOGOUT };
+};
+
+const checkAuthTimeout = expirationTime => {
+  return {
+    type: actionTypes.AUTH_CHECK_TIMEOUT,
+    expirationTime
+  };
 };
 
 export const auth = (email, password, isSignUp) => dispatch => {

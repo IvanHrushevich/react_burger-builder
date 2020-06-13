@@ -11,7 +11,7 @@ export function* logoutSaga() {
 }
 
 export function* checkAuthTimeoutSaga(action) {
-  yield delay(action.expirationTime * 1000);
+  yield delay(action.expirationTime);
   yield put(authActions.logout());
 }
 
@@ -35,14 +35,11 @@ export function* authUserSaga(action) {
       data: authData
     });
 
-    setTokenToLocalStorage(
-      response.data.idToken,
-      Number(response.data.expiresIn) * 1000,
-      response.data.localId
-    );
+    const experesInMs = Number(response.data.expiresIn) * 1000;
+    setTokenToLocalStorage(response.data.idToken, experesInMs, response.data.localId);
 
     yield put(authActions.authSuccess(response.data.idToken, response.data.localId));
-    yield put(authActions.checkAuthTimeout(response.data.expiresIn));
+    yield put(authActions.checkAuthTimeout(experesInMs));
   } catch (error) {
     yield put(authActions.authFail(error.response.data.error));
   }

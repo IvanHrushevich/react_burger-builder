@@ -14,7 +14,8 @@ import {
   buregerBuilderReducer,
   orderReducer,
   watchAuth,
-  watchBurgerBuilder
+  watchBurgerBuilder,
+  watchOrder
 } from './store/index';
 
 const composeEnhancers =
@@ -34,6 +35,7 @@ const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk, s
 
 sagaMiddleware.run(watchAuth);
 sagaMiddleware.run(watchBurgerBuilder);
+sagaMiddleware.run(watchOrder);
 
 const app = (
   <Provider store={store}>
